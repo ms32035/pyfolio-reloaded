@@ -320,7 +320,7 @@ def plot_holdings(returns, positions, legend_loc="best", ax=None, **kwargs):
 
     positions = positions.copy().drop("cash", axis="columns")
     df_holdings = positions.replace(0, np.nan).count(axis=1)
-    df_holdings_by_month = df_holdings.resample("1M").mean()
+    df_holdings_by_month = df_holdings.resample("1ME").mean()
     df_holdings.plot(color="steelblue", alpha=0.6, lw=0.5, ax=ax, **kwargs)
     df_holdings_by_month.plot(color="orangered", lw=2, ax=ax, **kwargs)
     ax.axhline(df_holdings.values.mean(), color="steelblue", ls="--", lw=3)
@@ -667,7 +667,7 @@ def show_perf_stats(
     for column in perf_stats.columns:
         for stat, value in perf_stats[column].items():
             if stat in STAT_FUNCS_PCT:
-                perf_stats.loc[stat, column] = str(np.round(value * 100, 3)) + "%"
+                perf_stats.loc[stat, column] = np.round(value * 100, 3)
     if header_rows is None:
         header_rows = date_rows
     else:
@@ -847,7 +847,7 @@ def plot_rolling_returns(
                 is_returns,
                 len(oos_cum_returns),
                 cone_std=cone_std,
-                starting_value=is_cum_returns[-1],
+                starting_value=is_cum_returns.iloc[-1],
             )
 
             cone_bounds = cone_bounds.set_index(oos_cum_returns.index)
